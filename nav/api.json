@@ -1,0 +1,44 @@
+[
+  {
+    "title": "Overview",
+    "path": "docs/api/overview.md",
+    "icon": "class:🔎",
+    "tags": "api,integration,development"
+  },
+  {
+    "title": "Authentication",
+    "path": "docs/api/authentication.md",
+    "icon": "class:🔑",
+    "tags": "api,auth,security"
+  },
+  {
+    "title": "Users API",
+    "path": "docs/api/users.md",
+    "icon": "class:👤",
+    "tags": "api,users,accounts"
+  },
+  {
+    "title": "Campaigns API",
+    "path": "docs/api/campaigns.md",
+    "icon": "class:📣",
+    "tags": "api,campaigns,fundraising"
+  },
+  {
+    "title": "Donations API",
+    "path": "docs/api/donations.md",
+    "icon": "class:💸",
+    "tags": "api,donations,transactions"
+  },
+  {
+    "title": "Webhook Events",
+    "path": "docs/api/webhooks.md",
+    "icon": "class:🪝",
+    "tags": "api,events,notifications"
+  },
+  {
+    "title": "SDKs & Libraries",
+    "path": "docs/api/sdks.md",
+    "icon": "class:📦",
+    "tags": "api,libraries,tools"
+  }
+]

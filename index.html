@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Give Hub Documentation</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="favicon.ico">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Navigation Sidebar Component -->
+    <nav-sidebar data-nav-url="nav/main.json" data-default-page="docs/home.md"></nav-sidebar>
+    
+    <!-- Mobile Navigation Toggle -->
+    <button id="mobile-nav-toggle" class="mobile-nav-toggle">
+      <span class="menu-icon">&#9776;</span>
+      <span class="close-icon">&times;</span>
+    </button>
+    
+    <!-- Content Area -->
+    <div class="content-area">
+      <!-- Tabs Container Component -->
+      <tabs-container></tabs-container>
+      
+      <!-- Markdown Editor Component -->
+      <markdown-editor></markdown-editor>
+    </div>
+  </div>
+  
+  <!-- Scripts -->
+  <script src="js/register-components.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

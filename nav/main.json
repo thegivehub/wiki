@@ -1,0 +1,108 @@
+[
+  {
+    "title": "Home",
+    "path": "docs/home.md",
+    "icon": "class:🏠",
+    "tags": "home,start,welcome"
+  },
+  {
+    "title": "About The Give Hub",
+    "path": "docs/about.md",
+    "icon": "class:ℹ️",
+    "tags": "about,mission,vision"
+  },
+  {
+    "title": "Getting Started",
+    "icon": "class:🚀",
+    "_children": [
+      {
+        "title": "Installation",
+        "path": "docs/getting-started/installation.md",
+        "icon": "class:📥",
+        "tags": "setup,install"
+      },
+      {
+        "title": "Configuration",
+        "path": "docs/getting-started/configuration.md",
+        "icon": "class:⚙️",
+        "tags": "setup,config,settings"
+      },
+      {
+        "title": "Quick Start Guide",
+        "path": "docs/getting-started/quick-start.md",
+        "icon": "class:⏱️",
+        "tags": "guide,tutorial,start"
+      }
+    ]
+  },
+  {
+    "title": "Blockchain Integration",
+    "icon": "class:⛓️",
+    "_include": "nav/blockchain.json"
+  },
+  {
+    "title": "Platform Features",
+    "icon": "class:✨",
+    "_children": [
+      {
+        "title": "User Management",
+        "path": "docs/features/users.md",
+        "icon": "class:👥",
+        "tags": "users,accounts,profiles"
+      },
+      {
+        "title": "Campaigns",
+        "path": "docs/features/campaigns.md",
+        "icon": "class:📢",
+        "tags": "campaigns,fundraising"
+      },
+      {
+        "title": "Donations",
+        "path": "docs/features/donations.md",
+        "icon": "class:💰",
+        "tags": "payments,support,give"
+      },
+      {
+        "title": "Reporting",
+        "path": "docs/features/reporting.md",
+        "icon": "class:📊",
+        "tags": "statistics,analytics,charts"
+      }
+    ]
+  },
+  {
+    "title": "API Reference",
+    "icon": "class:🔌",
+    "_include": "nav/api.json"
+  },
+  {
+    "title": "Development",
+    "icon": "class:💻",
+    "_children": [
+      {
+        "title": "Architecture",
+        "path": "docs/development/architecture.md",
+        "icon": "class:🏗️",
+        "tags": "structure,design,organization"
+      },
+      {
+        "title": "Contributing",
+        "path": "docs/development/contributing.md",
+        "icon": "class:🤝",
+        "tags": "help,guidelines,community"
+      },
+      {
+        "title": "Testing",
+        "path": "docs/development/testing.md",
+        "icon": "class:🧪",
+        "tags": "tests,quality,qa"
+      }
+    ]
+  },
+  {
+    "title": "Support & FAQs",
+    "path": "docs/support.md",
+    "icon": "class:❓",
+    "tags": "help,questions,problems"
+  }
+]

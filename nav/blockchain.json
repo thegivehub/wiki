@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Stellar Basics",
+    "path": "docs/blockchain/stellar-basics.md",
+    "icon": "class:🌟",
+    "tags": "stellar,blockchain,crypto"
+  },
+  {
+    "title": "Wallet Integration",
+    "path": "docs/blockchain/wallet.md", 
+    "icon": "class:👛",
+    "tags": "wallet,payments,storage"
+  },
+  {
+    "title": "Transaction Management",
+    "path": "docs/blockchain/transactions.md",
+    "icon": "class:💸",
+    "tags": "transfers,payments,history"
+  },
+  {
+    "title": "Smart Contracts",
+    "path": "docs/blockchain/smart-contracts.md",
+    "icon": "class:📝",
+    "tags": "contracts,automation,rules"
+  },
+  {
+    "title": "Security",
+    "path": "docs/blockchain/security.md",
+    "icon": "class:🔒",
+    "tags": "security,protection,privacy"
+  }
+]
