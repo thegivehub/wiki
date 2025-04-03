@@ -1,0 +1,44 @@
+[
+  {
+    "title": "Platform Overview",
+    "path": "docs/overview/index.md",
+    "icon": "class:🔍",
+    "tags": "overview,platform,introduction"
+  },
+  {
+    "title": "Authentication",
+    "path": "docs/overview/authentication.md",
+    "icon": "class:🔑",
+    "tags": "authentication,login,security"
+  },
+  {
+    "title": "Best Practices",
+    "path": "docs/overview/best-practices.md",
+    "icon": "class:✅",
+    "tags": "best practices,guidelines,recommendations"
+  },
+  {
+    "title": "SDKs",
+    "path": "docs/overview/sdks.md",
+    "icon": "class:📦",
+    "tags": "sdk,libraries,integration"
+  },
+  {
+    "title": "Security & Privacy",
+    "path": "docs/overview/security-privacy.md",
+    "icon": "class:🔒",
+    "tags": "security,privacy,protection"
+  },
+  {
+    "title": "Technical Details",
+    "path": "docs/overview/technical.md",
+    "icon": "class:⚙️",
+    "tags": "technical,architecture,specification"
+  },
+  {
+    "title": "Webhooks",
+    "path": "docs/overview/webhooks.md", 
+    "icon": "class:🪝",
+    "tags": "webhooks,events,integration"
+  }
+]

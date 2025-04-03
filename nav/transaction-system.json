@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Transaction System Overview",
+    "path": "docs/blockchain/transaction-system/transaction-system.md",
+    "icon": "class:📃",
+    "tags": "transaction,overview,system"
+  },
+  {
+    "title": "Integration Guide",
+    "path": "docs/blockchain/transaction-system/transaction-system-integration.md",
+    "icon": "class:🔄",
+    "tags": "transaction,integration,implementation"
+  },
+  {
+    "title": "Best Practices",
+    "path": "docs/blockchain/transaction-system/transaction-system-best-practices.md",
+    "icon": "class:✅",
+    "tags": "transaction,best-practices,recommendations"
+  },
+  {
+    "title": "Troubleshooting",
+    "path": "docs/blockchain/transaction-system/transaction-system-troubleshooting.md",
+    "icon": "class:🔧",
+    "tags": "transaction,troubleshooting,issues"
+  }
+]

@@ -49,9 +49,11 @@ class MarkdownEditor extends HTMLElement {
     this.shadowRoot.innerHTML = `
       <style>
         :host {
-          display: block;
-          height: 100%;
-          overflow: auto;
+          display: flex;
+          flex-direction: column;
+          height: calc(100% - var(--tabs-height, 40px));
+          width: 100%;
+          overflow: hidden;
           background-color: var(--editor-bg-color, white);
           color: var(--editor-text-color, #333);
           font-family: var(--editor-font-family, system-ui, sans-serif);
@@ -63,17 +65,20 @@ class MarkdownEditor extends HTMLElement {
           background-color: var(--toolbar-bg-color, #f5f5f5);
           border-bottom: 1px solid var(--toolbar-border-color, #e0e0e0);
           align-items: center;
+          flex-shrink: 0;
+          overflow: hidden;
         }
         
         .toolbar button {
           padding: 6px 12px;
           margin-right: 8px;
           background-color: var(--button-bg-color, #fff);
+          color: var(--text-color, #333);
           border: 1px solid var(--button-border-color, #d0d0d0);
           border-radius: 4px;
           cursor: pointer;
           font-size: 14px;
-          transition: background-color 0.15s ease;
+          transition: all 0.15s ease;
         }
         
         .toolbar button:hover {
@@ -105,18 +110,19 @@ class MarkdownEditor extends HTMLElement {
         }
         
         .container {
-          height: calc(100% - 45px);
+          flex: 1;
           overflow: auto;
         }
         
         .viewer {
           padding: 20px;
           line-height: 1.6;
+          max-width: 860px;
+          margin: 0 auto;
         }
         
         .viewer h1, .viewer h2, .viewer h3, .viewer h4, .viewer h5, .viewer h6 {
-          margin-top: 1.5em;
-          margin-bottom: 0.5em;
+          margin: 1em 0 0.5em 0;
           font-weight: 600;
           line-height: 1.25;
         }
@@ -139,6 +145,14 @@ class MarkdownEditor extends HTMLElement {
         
         .viewer h3 {
           font-size: 1.25em;
+        }
+        
+        .viewer h4 {
+          font-size: 1.1em;
+        }
+        
+        .viewer h5, .viewer h6 {
+          font-size: 1em;
         }
         
         .viewer p {
@@ -225,6 +239,7 @@ class MarkdownEditor extends HTMLElement {
           color: var(--editor-textarea-text-color, #333);
           resize: none;
           outline: none;
+          overflow: auto;
         }
         
         .placeholder {
@@ -371,22 +386,6 @@ class MarkdownEditor extends HTMLElement {
     }
   }
   
-  // Render the document in current mode (view or edit)
-  renderDocument() {
-    const container = this.shadowRoot.querySelector('.container');
-    
-    if (this.state.editMode) {
-      // Edit mode - show textarea
-      container.innerHTML = `<textarea class="editor"></textarea>`;
-      const textarea = container.querySelector('.editor');
-      textarea.value = this.state.content;
-      textarea.addEventListener('input', this.handleContentChange);
-      textarea.focus();
-    } else {
-      // View mode - show rendered markdown
-      container.innerHTML = `<div class="viewer">${this.markdownToHtml(this.state.content)}</div>`;
-    }
-  }
   
   // Toggle between edit and view modes
   toggleEditMode() {
@@ -508,11 +507,33 @@ class MarkdownEditor extends HTMLElement {
     }
   }
   
-  // Convert markdown to HTML
+  // Convert markdown to HTML using marked.js
   markdownToHtml(markdown) {
     if (!markdown) return '';
     
-    // This is a simple implementation - in production, use a library like marked.js
+    // Use marked.js if available, otherwise fallback to simpler rendering
+    if (typeof window.marked !== 'undefined') {
+      // Configure marked options
+      window.marked.setOptions({
+        breaks: true,        // Add <br> on single line breaks
+        gfm: true,           // Use GitHub Flavored Markdown
+        headerIds: true,     // Add IDs to headers for anchor links
+        langPrefix: 'language-', // CSS language prefix for code blocks
+        mangle: false,       // Don't escape autolinked email addresses
+        pedantic: false,     // Don't conform to original markdown.pl
+        sanitize: false,     // Don't sanitize HTML (security is handled by the shadow DOM)
+        smartLists: true,    // Use smarter list behavior
+        smartypants: true,   // Use smart typographic punctuation
+        xhtml: false         // Don't use self-closing tags for HTML
+      });
+      
+      // Convert markdown to HTML using marked
+      return window.marked.parse(markdown);
+    }
+    
+    // Fallback to basic implementation if marked is not available
+    console.warn('marked.js library not found, using fallback markdown parser');
+    
     let html = markdown
       // Headers
       .replace(/^# (.*$)/gm, '<h1>$1</h1>')
@@ -541,7 +562,7 @@ class MarkdownEditor extends HTMLElement {
       // Inline code
       .replace(/`([^`]+)`/g, '<code>$1</code>')
       
-      // Unordered lists - handle multi-level
+      // Unordered lists
       .replace(/^\s*[-*+]\s+(.*?)$/gm, '<li>$1</li>')
       
       // Ordered lists
@@ -573,6 +594,44 @@ class MarkdownEditor extends HTMLElement {
       .replace(/\n/g, '<br>');
       
     return html;
+  }
+  
+  // Handle the document's HTML rendering in view mode
+  renderDocument() {
+    const container = this.shadowRoot.querySelector('.container');
+    
+    if (this.state.editMode) {
+      // Edit mode - show textarea
+      container.innerHTML = `<textarea class="editor"></textarea>`;
+      const textarea = container.querySelector('.editor');
+      textarea.value = this.state.content;
+      textarea.addEventListener('input', this.handleContentChange);
+      textarea.focus();
+    } else {
+      // View mode - show rendered markdown
+      const html = this.markdownToHtml(this.state.content);
+      container.innerHTML = `<div class="viewer">${html}</div>`;
+      
+      // Add event listeners to links to handle internal navigation
+      const links = container.querySelectorAll('.viewer a');
+      links.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && href.endsWith('.md')) {
+          link.addEventListener('click', (event) => {
+            event.preventDefault();
+            // Dispatch navigation event to open this document
+            this.dispatchEvent(new CustomEvent('nav-item-selected', {
+              bubbles: true,
+              composed: true,
+              detail: { 
+                path: href,
+                title: link.textContent
+              }
+            }));
+          });
+        }
+      });
+    }
   }
 }
 

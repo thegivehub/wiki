@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Frontend Guide",
+    "path": "docs/development/frontend-guide.md",
+    "icon": "class:🖥️",
+    "tags": "frontend,ui,interface"
+  },
+  {
+    "title": "Backend Guide",
+    "path": "docs/development/backend-guide.md",
+    "icon": "class:⚙️",
+    "tags": "backend,server,api"
+  },
+  {
+    "title": "Database Schema",
+    "path": "docs/development/database-schema.md",
+    "icon": "class:🗃️",
+    "tags": "database,schema,data"
+  },
+  {
+    "title": "Deployment Guide",
+    "path": "docs/development/deployment-guide.md",
+    "icon": "class:🚀",
+    "tags": "deployment,launch,setup"
+  }
+]

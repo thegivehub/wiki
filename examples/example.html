@@ -1,0 +1,227 @@
+<!-- HTML Example demonstrating theme usage -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Web Component - Themed</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Lexend', -apple-system, BlinkMacSystemFont, sans-serif;
+            display: flex;
+            width: 100vw;
+        }
+        
+        main {
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+            flex: 1;
+        }
+        
+        /* When resizing is active */
+        body.resizing-nav {
+            cursor: ew-resize;
+            user-select: none;
+        }
+        
+        body.resizing-nav * {
+            user-select: none !important;
+        }
+        
+        @media (max-width: 767px) {
+            main {
+                margin-left: 0;
+            }
+        }
+        
+        /* Dark Theme */
+        site-navigation.theme-dark {
+            --nav-bg-color: #1f2937;
+            --nav-text-color: #e5e7eb;
+            --nav-border-color: #374151;
+            --nav-hover-bg-color: #374151;
+            --nav-active-bg-color: #2563eb;
+            --nav-active-text-color: white;
+            --nav-icon-color: #9ca3af;
+            --nav-active-icon-color: white;
+            --nav-toggle-button-bg: #2563eb;
+            --nav-toggle-button-color: white;
+            --nav-toggle-button-hover-bg: #1d4ed8;
+            --nav-scrollbar-thumb-color: #4b5563;
+            --nav-scrollbar-track-color: #374151;
+            --nav-header-bg-color: #111827;
+            --nav-shadow-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Light Blue Theme */
+        site-navigation.theme-light-blue {
+            --nav-bg-color: #f0f9ff;
+            --nav-text-color: #0c4a6e;
+            --nav-border-color: #bae6fd;
+            --nav-hover-bg-color: #e0f2fe;
+            --nav-active-bg-color: #0ea5e9;
+            --nav-active-text-color: white;
+            --nav-icon-color: #0284c7;
+            --nav-active-icon-color: white;
+            --nav-toggle-button-bg: #0ea5e9;
+            --nav-toggle-button-color: white;
+            --nav-toggle-button-hover-bg: #0284c7;
+            --nav-scrollbar-thumb-color: #7dd3fc;
+            --nav-scrollbar-track-color: #e0f2fe;
+            --nav-header-bg-color: #e0f2fe;
+        }
+        
+        /* Green Theme */
+        site-navigation.theme-green {
+            --nav-bg-color: #f0fdf4;
+            --nav-text-color: #166534;
+            --nav-border-color: #bbf7d0;
+            --nav-hover-bg-color: #dcfce7;
+            --nav-active-bg-color: #16a34a;
+            --nav-active-text-color: white;
+            --nav-icon-color: #22c55e;
+            --nav-active-icon-color: white;
+            --nav-toggle-button-bg: #16a34a;
+            --nav-toggle-button-color: white;
+            --nav-toggle-button-hover-bg: #15803d;
+            --nav-scrollbar-thumb-color: #86efac;
+            --nav-scrollbar-track-color: #dcfce7;
+            --nav-header-bg-color: #dcfce7;
+        }
+        
+        /* Purple Theme */
+        site-navigation.theme-purple {
+            --nav-bg-color: #faf5ff;
+            --nav-text-color: #581c87;
+            --nav-border-color: #e9d5ff;
+            --nav-hover-bg-color: #f3e8ff;
+            --nav-active-bg-color: #9333ea;
+            --nav-active-text-color: white;
+            --nav-icon-color: #a855f7;
+            --nav-active-icon-color: white;
+            --nav-toggle-button-bg: #9333ea;
+            --nav-toggle-button-color: white;
+            --nav-toggle-button-hover-bg: #7e22ce;
+            --nav-scrollbar-thumb-color: #d8b4fe;
+            --nav-scrollbar-track-color: #f3e8ff;
+            --nav-header-bg-color: #f3e8ff;
+        }
+        
+        /* Theme selector controls */
+        .theme-controls {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        
+        .theme-controls select {
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #e5e7eb;
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Selector -->
+    <div class="theme-controls">
+        <label for="theme-select">Theme: </label>
+        <select id="theme-select">
+            <option value="default">Default</option>
+            <option value="dark">Dark</option>
+            <option value="light-blue">Light Blue</option>
+            <option value="green">Green</option>
+            <option value="purple">Purple</option>
+        </select>
+    </div>
+
+    <!-- Navigation Web Component -->
+    <nav-sidebar id="main-nav" data-nav-url="/nav/main.json" data-default-page="dashboard.html" data-editable="true" data-backend-url="nav-editor.php"></nav-sidebar>
+    
+    <!-- Main Content Area -->
+    <main id="content">
+        <h1>Navigation Web Component Demo</h1>
+        <p>This demonstrates the themed navigation component with mobile responsiveness.</p>
+        <p>You can now add new navigation entries by hovering over any navigation item and clicking the "+" button that appears.</p>
+    </main>
+    
+    <script>
+        // Theme selection handler
+        document.getElementById('theme-select').addEventListener('change', function(e) {
+            const theme = e.target.value;
+            const nav = document.getElementById('main-nav');
+            
+            if (theme === 'default') {
+                nav.removeAttribute('theme');
+                document.body.style.backgroundColor = '';
+            } else {
+                nav.setAttribute('theme', theme);
+                
+                // Optionally adjust body background color to match theme
+                switch(theme) {
+                    case 'dark':
+                        document.body.style.backgroundColor = '#111827';
+                        document.body.style.color = '#f9fafb';
+                        break;
+                    case 'light-blue':
+                        document.body.style.backgroundColor = '#f0f9ff';
+                        document.body.style.color = '#0c4a6e';
+                        break;
+                    case 'green':
+                        document.body.style.backgroundColor = '#f0fdf4';
+                        document.body.style.color = '#166534';
+                        break;
+                    case 'purple':
+                        document.body.style.backgroundColor = '#faf5ff';
+                        document.body.style.color = '#581c87';
+                        break;
+                    default:
+                        document.body.style.backgroundColor = '';
+                        document.body.style.color = '';
+                }
+            }
+        });
+        
+        // Handle navigation mode changes to adjust content margin
+        document.getElementById('main-nav').addEventListener('navigation-mode-change', function(e) {
+            const content = document.getElementById('content');
+            
+            if (e.detail.isMobile) {
+                content.style.marginLeft = '0';
+            } else {
+                // Get the current width of the sidebar
+                const navWidth = localStorage.getItem('nav-sidebar-width') || '250px';
+                content.style.marginLeft = navWidth;
+            }
+        });
+        
+        // Handle navigation resizing
+        document.getElementById('main-nav').addEventListener('navigation-resized', function(e) {
+            const content = document.getElementById('content');
+            content.style.marginLeft = e.detail.width + 'px';
+        });
+        
+        // Initial adjustment
+        window.addEventListener('load', function() {
+            const content = document.getElementById('content');
+            const isMobile = window.innerWidth < 768;
+            
+            if (!isMobile) {
+                const navWidth = localStorage.getItem('nav-sidebar-width') || '250px';
+                content.style.marginLeft = navWidth;
+            }
+        });
+        
+        // Load the web component script
+        const script = document.createElement('script');
+        script.src = '../js/navigation.js';
+        document.body.appendChild(script);
+    </script>
+</body>
+</html>

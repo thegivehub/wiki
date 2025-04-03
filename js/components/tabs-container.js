@@ -36,12 +36,12 @@ class TabsContainer extends HTMLElement {
       <style>
         :host {
           display: flex;
-          overflow-x: auto;
+          overflow: hidden;
           background-color: var(--tabs-bg-color, #f5f5f5);
           border-bottom: 1px solid var(--tabs-border-color, #ddd);
           height: 40px;
           flex-shrink: 0;
-          scrollbar-width: thin;
+          width: 100%;
         }
         
         :host::-webkit-scrollbar {

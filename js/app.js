@@ -273,27 +273,14 @@ class GiveHubDocs {
   
   // Handle navigation resize events
   handleNavigationResized(event) {
-    const { width } = event.detail;
-    const contentArea = document.querySelector('.content-area');
-    
-    if (contentArea) {
-      contentArea.style.marginLeft = `${width}px`;
-    }
+    // No need to manually adjust since we're using flex layout
+    console.log('Navigation resized', event.detail);
   }
   
   // Handle navigation mode changes (mobile/desktop)
   handleNavigationModeChange(event) {
-    const { isMobile } = event.detail;
-    const contentArea = document.querySelector('.content-area');
-    
-    if (contentArea) {
-      if (isMobile) {
-        contentArea.style.marginLeft = '0';
-      } else {
-        const navWidth = this.navSidebar.offsetWidth;
-        contentArea.style.marginLeft = `${navWidth}px`;
-      }
-    }
+    // No need to manually adjust since we're using flex layout
+    console.log('Navigation mode changed', event.detail);
   }
   
   // Handle initial route from URL

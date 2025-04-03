@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Overview",
+    "path": "docs/getting-started.md",
+    "icon": "class:🚀",
+    "tags": "getting started,introduction,setup"
+  },
+  {
+    "title": "Installation",
+    "path": "docs/getting-started/installation.md",
+    "icon": "class:📥",
+    "tags": "installation,setup,dependencies"
+  },
+  {
+    "title": "Configuration",
+    "path": "docs/getting-started/configuration.md",
+    "icon": "class:⚙️",
+    "tags": "configuration,settings,options"
+  },
+  {
+    "title": "Quick Start",
+    "path": "docs/getting-started/quick-start.md",
+    "icon": "class:⏱️",
+    "tags": "quickstart,tutorial,guide"
+  }
+]

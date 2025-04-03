@@ -2,43 +2,97 @@
   {
     "title": "Overview",
     "path": "docs/api/overview.md",
-    "icon": "class:🔎",
-    "tags": "api,integration,development"
+    "icon": "class:📘",
+    "tags": "api,reference,overview"
   },
   {
-    "title": "Authentication",
-    "path": "docs/api/authentication.md",
-    "icon": "class:🔑",
-    "tags": "api,auth,security"
+    "title": "API Reference",
+    "path": "docs/api-reference.md",
+    "icon": "class:📚",
+    "tags": "api,reference,endpoints"
   },
   {
-    "title": "Users API",
-    "path": "docs/api/users.md",
-    "icon": "class:👤",
-    "tags": "api,users,accounts"
+    "title": "DefaultApi",
+    "path": "docs/api/DefaultApi.md",
+    "icon": "class:🔌",
+    "tags": "api,endpoints"
   },
   {
-    "title": "Campaigns API",
-    "path": "docs/api/campaigns.md",
+    "title": "Auth Login",
+    "path": "docs/api/AuthLoginPostRequest.md",
+    "icon": "class:🔐",
+    "tags": "api,auth,login"
+  },
+  {
+    "title": "Auth Response",
+    "path": "docs/api/AuthLoginPost200Response.md",
+    "icon": "class:✅",
+    "tags": "api,auth,response"
+  },
+  {
+    "title": "Campaign",
+    "path": "docs/api/Campaign.md",
     "icon": "class:📣",
-    "tags": "api,campaigns,fundraising"
+    "tags": "api,campaign,model"
   },
   {
-    "title": "Donations API",
-    "path": "docs/api/donations.md",
+    "title": "Campaign Location",
+    "path": "docs/api/CampaignLocation.md",
+    "icon": "class:📍",
+    "tags": "api,campaign,location"
+  },
+  {
+    "title": "Coordinates",
+    "path": "docs/api/CampaignLocationCoordinates.md",
+    "icon": "class:🗺️",
+    "tags": "api,location,coordinates"
+  },
+  {
+    "title": "Donation",
+    "path": "docs/api/Donation.md",
+    "icon": "class:💰",
+    "tags": "api,donation,model"
+  },
+  {
+    "title": "Donation Amount",
+    "path": "docs/api/DonationAmount.md",
+    "icon": "class:💵",
+    "tags": "api,donation,amount"
+  },
+  {
+    "title": "Donation Transaction",
+    "path": "docs/api/DonationTransaction.md",
     "icon": "class:💸",
-    "tags": "api,donations,transactions"
+    "tags": "api,donation,transaction"
   },
   {
-    "title": "Webhook Events",
-    "path": "docs/api/webhooks.md",
-    "icon": "class:🪝",
-    "tags": "api,events,notifications"
+    "title": "Impact Metric",
+    "path": "docs/api/ImpactMetric.md",
+    "icon": "class:📊",
+    "tags": "api,impact,metric"
   },
   {
-    "title": "SDKs & Libraries",
-    "path": "docs/api/sdks.md",
-    "icon": "class:📦",
-    "tags": "api,libraries,tools"
+    "title": "Milestone",
+    "path": "docs/api/Milestone.md",
+    "icon": "class:🏆",
+    "tags": "api,milestone,goal"
+  },
+  {
+    "title": "User",
+    "path": "docs/api/User.md",
+    "icon": "class:👤",
+    "tags": "api,user,model"
+  },
+  {
+    "title": "User Profile",
+    "path": "docs/api/UserProfile.md",
+    "icon": "class:👥",
+    "tags": "api,user,profile"
+  },
+  {
+    "title": "User Wallet",
+    "path": "docs/api/UserWallet.md",
+    "icon": "class:👛",
+    "tags": "api,user,wallet"
   }
 ]

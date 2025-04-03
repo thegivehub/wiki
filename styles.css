@@ -1,0 +1,310 @@
+/* styles.css - Main stylesheet for The Give Hub Documentation Platform */
+
+/* Base Variables */
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #2ecc71;
+  --text-color: #333;
+  --bg-color: #f9f9f9;
+  --nav-width: 250px;
+  --header-height: 50px;
+  --tabs-height: 40px;
+  --border-color: #ddd;
+  --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --code-font: 'Courier New', monospace;
+}
+
+/* Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-family);
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  height: 100vh;
+  overflow: hidden;
+  line-height: 1.5;
+}
+
+/* Layout */
+#app-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+#resizer {
+  width: 5px;
+  height: 100%;
+  background-color: var(--border-color);
+  cursor: col-resize;
+  flex-shrink: 0;
+  transition: background-color 0.2s;
+}
+
+#resizer:hover {
+  background-color: var(--primary-color);
+}
+
+#content-area {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Top Navigation */
+#top-nav {
+  height: var(--header-height);
+  background-color: #fff;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+#app-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+}
+
+#app-title img {
+  height: 28px;
+  margin-right: 10px;
+}
+
+/* Settings Dropdown */
+.settings-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.settings-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-color);
+}
+
+.settings-button:hover {
+  color: var(--primary-color);
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #fff;
+  min-width: 200px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.dropdown-content a {
+  color: var(--text-color);
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  transition: background-color 0.2s;
+}
+
+.dropdown-content a:hover {
+  background-color: #f5f5f5;
+  color: var(--primary-color);
+}
+
+.settings-dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Notifications */
+.notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  background-color: var(--secondary-color);
+  color: white;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.notification.error {
+  background-color: #e74c3c;
+}
+
+.notification.warning {
+  background-color: #f39c12;
+}
+
+.notification.fade-out {
+  opacity: 0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  #nav-sidebar {
+    position: absolute;
+    z-index: 10;
+    height: 100%;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  #nav-sidebar.open {
+    transform: translateX(0);
+  }
+  
+  #resizer {
+    display: none;
+  }
+  
+  #mobile-nav-toggle {
+    display: block;
+    margin-right: 10px;
+  }
+  
+  #app-title {
+    font-size: 16px;
+  }
+  
+  .settings-button span:nth-child(2) {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  #mobile-nav-toggle {
+    display: none;
+  }
+}
+
+/* Mobile Navigation Toggle */
+#mobile-nav-toggle {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+  color: var(--text-color);
+}
+
+/* Print Styles */
+@media print {
+  #nav-sidebar, #resizer, #top-nav, #tabs-container, .toolbar {
+    display: none !important;
+  }
+  
+  #content-area {
+    overflow: visible;
+  }
+  
+  #content-view {
+    overflow: visible !important;
+    height: auto !important;
+  }
+  
+  .viewer {
+    overflow: visible !important;
+    height: auto !important;
+    background-color: white !important;
+    color: black !important;
+  }
+  
+  body {
+    background-color: white;
+  }
+  
+  .viewer a {
+    color: #000 !important;
+    text-decoration: underline;
+  }
+  
+  .viewer a::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+  }
+}
+
+/* Animation Keyframes */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Apply animations */
+.viewer h1, .viewer h2, .viewer h3 {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.tab {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Accessibility */
+:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Mobile menu button to show in small screens */
+#mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+@media (max-width: 768px) {
+  #mobile-menu-btn {
+    display: block;
+  }
+}
+
+/* Add the mobile navigation overlay */
+#mobile-nav-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 5;
+}
+
+#mobile-nav-overlay.active {
+  display: block;
+}

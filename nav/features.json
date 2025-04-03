@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Users",
+    "path": "docs/features/users.md",
+    "icon": "class:👥",
+    "tags": "users,accounts,profiles"
+  },
+  {
+    "title": "Campaigns",
+    "path": "docs/features/campaigns.md",
+    "icon": "class:📣",
+    "tags": "campaigns,fundraising,projects"
+  },
+  {
+    "title": "Donations",
+    "path": "docs/features/donations.md",
+    "icon": "class:💰",
+    "tags": "donations,payments,giving"
+  },
+  {
+    "title": "Reporting",
+    "path": "docs/features/reporting.md",
+    "icon": "class:📊",
+    "tags": "reporting,analytics,insights"
+  }
+]
