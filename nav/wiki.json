@@ -1,0 +1,44 @@
+[
+  {
+    "title": "Wiki System Overview",
+    "path": "docs/wiki/overview.md",
+    "icon": "class:📚",
+    "tags": "overview,wiki,documentation"
+  },
+  {
+    "title": "Installation and Setup",
+    "path": "docs/wiki/installation.md",
+    "icon": "class:🛠️",
+    "tags": "installation,setup,configuration"
+  },
+  {
+    "title": "User Guide",
+    "path": "docs/wiki/user-guide.md",
+    "icon": "class:📖",
+    "tags": "guide,usage,help"
+  },
+  {
+    "title": "Adding and Editing Content",
+    "path": "docs/wiki/editing.md",
+    "icon": "class:✏️",
+    "tags": "editing,content,markdown"
+  },
+  {
+    "title": "Navigation Management",
+    "path": "docs/wiki/navigation.md",
+    "icon": "class:🧭",
+    "tags": "navigation,menu,structure"
+  },
+  {
+    "title": "Technical Reference",
+    "path": "docs/wiki/technical.md",
+    "icon": "class:💻",
+    "tags": "technical,code,reference"
+  },
+  {
+    "title": "Customization",
+    "path": "docs/wiki/customization.md",
+    "icon": "class:🎨",
+    "tags": "customization,themes,styling"
+  }
+]

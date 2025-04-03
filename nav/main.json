@@ -53,6 +53,11 @@
     "_include": "nav/kyc.json"
   },
   {
+    "title": "Wiki Documentation",
+    "icon": "class:📚",
+    "_include": "nav/wiki.json"
+  },
+  {
     "title": "Support",
     "path": "docs/support.md",
     "icon": "class:🙋",
