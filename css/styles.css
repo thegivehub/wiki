@@ -178,6 +178,14 @@ nav-sidebar {
   --nav-min-width: var(--nav-min-width);
   --nav-max-width: var(--nav-max-width);
   --nav-font-family: 'Inter', sans-serif;
+  --nav-add-button-bg: #e5e7eb;
+  --nav-add-button-color: #374151;
+  --nav-add-button-hover-bg: #d1d5db;
+  --nav-add-button-active-bg: var(--primary-color);
+  --nav-add-button-active-color: white;
+  --nav-overlay-bg-color: rgba(0, 0, 0, 0.5);
+  --nav-shadow-color: rgba(0, 0, 0, 0.1);
+  --nav-transition-duration: 0.3s;
 }
 
 /* Tabs container */

@@ -5,10 +5,10 @@
  * It ensures all components are properly defined before they're used in the DOM.
  */
 
-// Import components (if you're using ES modules)
-// import './components/nav-sidebar.js';
-// import './components/tabs-container.js';
-// import './components/markdown-editor.js';
+// Directly load the component scripts
+document.write('<script src="./js/components/nav-sidebar.js"></script>');
+document.write('<script src="./js/components/tabs-container.js"></script>');
+document.write('<script src="./js/components/markdown-editor.js"></script>');
 
 // Register components when the DOM content is loaded
 document.addEventListener('DOMContentLoaded', () => {

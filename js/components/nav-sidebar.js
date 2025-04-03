@@ -459,11 +459,11 @@ class NavSidebar extends HTMLElement {
         
         .nav-add-button {
           position: absolute;
-          right: 0.5rem;
+          right: 8px;
           top: 50%;
           transform: translateY(-50%);
-          background-color: var(--nav-active-bg-color, #2563eb);
-          color: var(--nav-active-text-color, white);
+          background-color: var(--nav-add-button-bg, #e5e7eb);
+          color: var(--nav-add-button-color, #374151);
           border: none;
           border-radius: 0.25rem;
           width: 1.5rem;
@@ -473,7 +473,7 @@ class NavSidebar extends HTMLElement {
           justify-content: center;
           cursor: pointer;
           opacity: 0;
-          transition: all var(--nav-transition-duration) ease;
+          transition: all var(--nav-transition-duration, 0.3s) ease;
           z-index: 10;
           margin-left: auto;
           font-weight: bold;
@@ -485,13 +485,13 @@ class NavSidebar extends HTMLElement {
         }
         
         .nav-add-button:hover {
-          background-color: var(--primary-color, #3b82f6);
+          background-color: var(--nav-add-button-hover-bg, #d1d5db);
           transform: translateY(-50%) scale(1.1);
         }
         
         .nav-add-button:active {
-          background-color: var(--secondary-color, #1d4ed8);
-          color: white;
+          background-color: var(--nav-add-button-active-bg, #2563eb);
+          color: var(--nav-add-button-active-color, white);
           transform: translateY(-50%) scale(0.95);
         }
         
@@ -680,14 +680,28 @@ class NavSidebar extends HTMLElement {
           <button class="nav-dialog-close" aria-label="Close dialog">&times;</button>
         </div>
         <form class="nav-dialog-form">
+          <input type="hidden" id="parent-path" value="">
+          <input type="hidden" id="target-file" value="">
+          
           <div class="form-group">
-            <label for="nav-title">Title</label>
-            <input type="text" id="nav-title" name="title" required>
+            <label for="nav-title">Title *</label>
+            <input type="text" id="nav-title" name="title" required placeholder="Enter item title">
           </div>
+          
           <div class="form-group">
             <label for="nav-path">Document Path</label>
-            <input type="text" id="nav-path" name="path" required>
+            <input type="text" id="nav-path" name="path" placeholder="Path to the document (e.g., docs/example.md)">
           </div>
+          
+          <div class="form-group">
+            <label for="nav-file-upload">Upload Document</label>
+            <div class="file-upload-container">
+              <input type="file" id="nav-file-upload" accept=".md,.html,.txt,.pdf">
+              <div class="file-upload-preview"></div>
+            </div>
+            <small class="file-upload-help">Supported formats: .md, .html, .txt, .pdf</small>
+          </div>
+          
           <div class="form-group">
             <label for="nav-icon">Icon</label>
             <select id="nav-icon" name="icon">
@@ -703,10 +717,12 @@ class NavSidebar extends HTMLElement {
               <option value="class:ℹ️">Info</option>
             </select>
           </div>
+          
           <div class="form-group">
             <label for="nav-tags">Tags (comma-separated)</label>
-            <input type="text" id="nav-tags" name="tags">
+            <input type="text" id="nav-tags" name="tags" placeholder="Enter comma-separated tags">
           </div>
+          
           <div class="dialog-footer">
             <button type="button" class="btn btn-cancel">Cancel</button>
             <button type="submit" class="btn btn-save">Save</button>
@@ -1003,7 +1019,7 @@ class NavSidebar extends HTMLElement {
       // Add click handler for the add button
       addButton.addEventListener('click', (e) => {
         e.stopPropagation();
-        this.handleAddButtonClick(e, item.path || '');
+        this.handleAddButtonClick(e, item.title);
       });
       
       navItem.appendChild(addButton);
@@ -1518,7 +1534,7 @@ class NavSidebar extends HTMLElement {
     const form = this.shadowRoot.querySelector('.nav-dialog-form');
     const iconTypeSelect = this.shadowRoot.querySelector('#nav-icon');
     const iconValueInput = this.shadowRoot.querySelector('#nav-title');
-    const fileUpload = this.shadowRoot.querySelector('#nav-path');
+    const fileUpload = this.shadowRoot.querySelector('#nav-file-upload');
     const filePreview = this.shadowRoot.querySelector('.file-upload-preview');
     
     // Close dialog when clicking backdrop or close button
@@ -1530,20 +1546,26 @@ class NavSidebar extends HTMLElement {
     form.addEventListener('submit', (e) => this.handleFormSubmit(e));
     
     // Update icon preview as the user types
-    iconTypeSelect.addEventListener('change', this.updateIconPreview);
-    iconValueInput.addEventListener('input', this.updateIconPreview);
+    if (iconTypeSelect) {
+      iconTypeSelect.addEventListener('change', this.updateIconPreview);
+    }
+    if (iconValueInput) {
+      iconValueInput.addEventListener('input', this.updateIconPreview);
+    }
     
     // Handle file upload preview
-    fileUpload.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        filePreview.textContent = `Selected file: ${file.name}`;
-        filePreview.style.color = 'var(--nav-active-text-color, #1890ff)';
-      } else {
-        filePreview.textContent = '';
-        filePreview.style.color = 'var(--nav-text-color, #333)';
-      }
-    });
+    if (fileUpload && filePreview) {
+      fileUpload.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          filePreview.textContent = `Selected file: ${file.name}`;
+          filePreview.style.color = 'var(--nav-active-text-color, #1890ff)';
+        } else {
+          filePreview.textContent = '';
+          filePreview.style.color = 'var(--nav-text-color, #333)';
+        }
+      });
+    }
   }
 
   // Handle dialog close
@@ -1578,8 +1600,28 @@ class NavSidebar extends HTMLElement {
     const backdrop = this.shadowRoot.querySelector('.nav-dialog-backdrop');
     const form = this.shadowRoot.querySelector('.nav-dialog-form');
     
+    // Reset form
+    form.reset();
+    
     // Set parent path in form data
     form.dataset.parentPath = parentPath;
+    
+    // Set the target file
+    const targetFile = 'nav/main.json';
+    if (form.querySelector('#target-file')) {
+      form.querySelector('#target-file').value = targetFile;
+    }
+    if (form.querySelector('#parent-path')) {
+      form.querySelector('#parent-path').value = parentPath;
+    }
+    
+    // Focus on title field
+    setTimeout(() => {
+      const titleInput = form.querySelector('#nav-title');
+      if (titleInput) {
+        titleInput.focus();
+      }
+    }, 100);
     
     // Show dialog
     dialog.classList.add('open');
@@ -1587,15 +1629,21 @@ class NavSidebar extends HTMLElement {
   }
 
   // Handle form submission
-  handleFormSubmit(e) {
+  async handleFormSubmit(e) {
     e.preventDefault();
     
     const form = e.target;
     const parentPath = form.dataset.parentPath;
-    const title = form.querySelector('#nav-title').value;
-    const path = form.querySelector('#nav-path').value;
+    const title = form.querySelector('#nav-title').value.trim();
+    const path = form.querySelector('#nav-path').value.trim();
     const icon = form.querySelector('#nav-icon').value;
-    const tags = form.querySelector('#nav-tags').value;
+    const tags = form.querySelector('#nav-tags').value.trim();
+    
+    // Validation - title is required
+    if (!title) {
+      alert('Title is required');
+      return;
+    }
     
     // Create the new navigation item
     const newItem = {
@@ -1605,11 +1653,41 @@ class NavSidebar extends HTMLElement {
       tags: tags ? tags.split(',').map(tag => tag.trim()) : []
     };
     
-    // Add the item to the navigation
-    this.addNavigationItem(newItem, parentPath);
-    
-    // Close the dialog
-    this.closeDialog();
+    try {
+      // Handle file upload if implemented
+      const fileInput = form.querySelector('input[type="file"]');
+      if (fileInput && fileInput.files.length > 0) {
+        const uploadedFile = fileInput.files[0];
+        const formData = new FormData();
+        formData.append('file', uploadedFile);
+        formData.append('path', path || `docs/${uploadedFile.name}`);
+        
+        // Upload the file
+        const uploadResponse = await fetch('nav-editor.php?action=upload', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const uploadResult = await uploadResponse.json();
+        
+        if (!uploadResult.success) {
+          throw new Error(uploadResult.message || 'Failed to upload file');
+        }
+        
+        // Update the path with the uploaded file's path
+        newItem.path = uploadResult.path;
+      }
+      
+      // Save to navigation
+      await this.addNavigationItem(newItem, parentPath);
+      
+      // Close the dialog
+      this.closeDialog();
+      
+    } catch (error) {
+      console.error('Error saving navigation:', error);
+      alert('An error occurred while saving the navigation: ' + error.message);
+    }
   }
 
   renderIcon(icon) {
@@ -1667,27 +1745,101 @@ class NavSidebar extends HTMLElement {
   // Add a new navigation item
   async addNavigationItem(item, parentPath = null) {
     try {
-      const response = await fetch(this.state.backendUrl, {
+      // Fetch current navigation data
+      const navUrl = this.getAttribute('data-nav-url') || 'nav/main.json';
+      const response = await fetch(navUrl);
+      
+      if (!response.ok) {
+        throw new Error(`Failed to load navigation file: ${response.status}`);
+      }
+      
+      let navData = await response.json();
+      
+      // Convert to array if it's not already (some files may be arrays directly)
+      if (!Array.isArray(navData)) {
+        if (navData.sidemenu && Array.isArray(navData.sidemenu)) {
+          navData = navData.sidemenu;
+        } else {
+          console.error('Unexpected navigation data format');
+          throw new Error('Navigation data has an unexpected format');
+        }
+      }
+      
+      // Find the parent item to add to, or add to root if no parent
+      if (!parentPath) {
+        // Add to root level
+        navData.push(item);
+      } else {
+        // Find parent item by path
+        let foundParent = false;
+        
+        // Helper function to search recursively
+        const addToParent = (items) => {
+          for (let i = 0; i < items.length; i++) {
+            if (items[i].title === parentPath) {
+              // Found the parent, add the child
+              if (!items[i].children) {
+                items[i].children = [];
+              }
+              items[i].children.push(item);
+              foundParent = true;
+              return true;
+            }
+            
+            // Check children if they exist
+            if (items[i].children && items[i].children.length > 0) {
+              if (addToParent(items[i].children)) {
+                return true;
+              }
+            }
+          }
+          return false;
+        };
+        
+        addToParent(navData);
+        
+        if (!foundParent) {
+          console.warn('Parent not found. Item will be added to the root level');
+          navData.push(item);
+        }
+      }
+      
+      // Save the updated navigation
+      const formData = new FormData();
+      formData.append('filename', navUrl);
+      
+      // If the data is an array but the target is main.json, wrap it in an object
+      let saveData;
+      if (navUrl === 'nav/main.json' && Array.isArray(navData)) {
+        saveData = { sidemenu: navData };
+      } else {
+        saveData = navData;
+      }
+      
+      formData.append('data', JSON.stringify(saveData, null, 2));
+      
+      // Send to the backend
+      const saveResponse = await fetch(this.state.backendUrl, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          parentPath,
-          item
-        })
+        body: formData
       });
       
-      const result = await response.json();
+      const result = await saveResponse.json();
+      
       if (result.success) {
-        // Reload navigation
+        // Show success message
+        console.log('Navigation item added successfully');
+        
+        // Reload the navigation
         await this.loadNavigation();
+        return true;
       } else {
-        throw new Error(result.error || 'Failed to save navigation');
+        throw new Error(result.message || 'Failed to save navigation');
       }
     } catch (error) {
       console.error('Error saving navigation:', error);
       alert('Failed to save navigation. Please try again.');
+      throw error;
     }
   }
 
