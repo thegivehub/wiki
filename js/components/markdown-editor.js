@@ -467,12 +467,12 @@ class MarkdownEditor extends HTMLElement {
     if (!this.state.currentPath || !this.state.unsavedChanges) return;
     
     try {
-      // In a real implementation, this would send content to the server
-      // For now, we'll just simulate a successful save
       console.log(`Saving document ${this.state.currentPath}...`);
       
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Show saving indicator
+      const status = this.shadowRoot.querySelector('.status');
+      status.textContent = 'Saving...';
+      status.className = 'status saving';
       
       // Dispatch save event for other components to handle
       this.dispatchEvent(new CustomEvent('content-save', {

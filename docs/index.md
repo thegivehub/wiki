@@ -1,0 +1,43 @@
+# Welcome to TheGiveHub Wiki
+
+This wiki serves as the central knowledge base for TheGiveHub platform, containing documentation, guides, and resources for users and developers.
+
+## Features
+
+- **Document Versioning**: All changes to documentation are tracked with Git
+- **Markdown Support**: Write content using simple Markdown syntax
+- **History Viewer**: View and compare document revisions
+- **Navigation**: Organize content with hierarchical navigation
+
+## Getting Started
+
+To start using the wiki, navigate through the sidebar or use the following quick links:
+
+- [User Guide](docs/user-guide.md)
+- [Developer Documentation](docs/developer/index.md)
+- [API Reference](docs/api/index.md)
+- [Contribution Guidelines](docs/contributing.md)
+
+## Editing Content
+
+To edit this or any other page:
+
+1. Click the "Edit" button in the toolbar
+2. Make your changes using Markdown syntax
+3. Enter a commit message describing your changes
+4. Click "Save" to commit your changes
+
+## Version History
+
+Every document in this wiki has a complete version history. To view it:
+
+1. Click the "History" button in the toolbar
+2. Browse previous versions
+3. Click "View" to see a previous version
+4. Compare different versions to see what changed
+5. Restore a previous version if needed
+
+---
+Testing updates.
+
+*Last updated: June 10, 2023* 

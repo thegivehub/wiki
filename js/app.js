@@ -124,13 +124,35 @@ We chose Stellar for The Give Hub platform for several compelling reasons:
     // Persist to localStorage
     this.persistToStorage();
     
-    // In a real implementation, would save to server here
+    // Save to server
     console.log(`Saving content to path: ${path}`);
     
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
-    return { success: true, path };
+    try {
+      // Create form data
+      const formData = new FormData();
+      formData.append("path", path);
+      formData.append("content", content);
+      
+      // Send POST request to document-editor.php
+      const response = await fetch("document-editor.php", {
+        method: "POST",
+        body: formData
+      });
+      
+      // Parse the response
+      const result = await response.json();
+      
+      if (!result.success) {
+        throw new Error(result.message || "Unknown error saving document");
+      }
+      
+      console.log("Document saved successfully to server", result);
+      return { success: true, path, serverResponse: result };
+    } catch (error) {
+      console.error("Error saving to server:", error);
+      // Still return success since we saved to localStorage
+      return { success: true, path, warning: "Saved to browser only. Server save failed." };
+    }
   }
   
   // Save content to localStorage
@@ -154,6 +176,7 @@ class GiveHubDocs {
   constructor() {
     // Initialize services
     this.contentManager = new ContentManager();
+    this.documentSynchronizer = new DocumentSynchronizer(this.contentManager);
     
     // Set theme preferences from localStorage
     this.initializeTheme();
@@ -166,6 +189,9 @@ class GiveHubDocs {
     
     // Load initial document if specified in URL
     this.handleInitialRoute();
+    
+    // Check for documents needing sync
+    this.checkForDocumentsNeedingSync();
   }
   
   // Find component elements in the DOM
@@ -242,11 +268,21 @@ class GiveHubDocs {
     const { path, content } = event.detail;
     
     try {
-      await this.contentManager.saveContent(path, content);
-      this.showNotification('Document saved successfully');
+      const result = await this.contentManager.saveContent(path, content);
+      
+      if (result.warning) {
+        // Show warning if saved to localStorage but not to server
+        this.showNotification('Document saved locally, but server save failed: ' + result.warning, 'warning');
+      } else if (result.serverResponse) {
+        // Show success with server details if available
+        this.showNotification('Document saved successfully to server');
+      } else {
+        // Generic success
+        this.showNotification('Document saved successfully');
+      }
     } catch (error) {
       console.error('Error saving content:', error);
-      this.showNotification('Failed to save document', 'error');
+      this.showNotification('Failed to save document: ' + error.message, 'error');
     }
   }
   
@@ -304,20 +340,66 @@ class GiveHubDocs {
   }
   
   // Show notification message
-  showNotification(message, type = 'success') {
+  showNotification(message, type = 'success', clickHandler = null) {
     // Create notification element
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
     notification.textContent = message;
     
+    // Add click handler if provided
+    if (clickHandler) {
+      notification.style.cursor = 'pointer';
+      notification.addEventListener('click', () => {
+        clickHandler();
+        notification.remove();
+      });
+    }
+    
     // Add to DOM
     document.body.appendChild(notification);
     
-    // Remove after delay
-    setTimeout(() => {
-      notification.classList.add('fade-out');
-      setTimeout(() => notification.remove(), 500);
-    }, 3000);
+    // Remove after delay (unless it has a click handler)
+    if (!clickHandler) {
+      setTimeout(() => {
+        notification.classList.add('fade-out');
+        setTimeout(() => notification.remove(), 500);
+      }, 3000);
+    }
+  }
+  
+  // Check for any documents needing synchronization
+  async checkForDocumentsNeedingSync() {
+    try {
+      const differences = await this.documentSynchronizer.scanAllDocuments();
+      
+      if (differences.length > 0) {
+        console.log(`Found ${differences.length} documents with differences between localStorage and server`);
+        
+        // Show notification about found differences
+        this.showNotification(
+          `Found ${differences.length} documents with local changes. Click here to sync.`,
+          "info",
+          () => this.showSyncDialog(differences)
+        );
+      }
+    } catch (error) {
+      console.error("Error checking for documents needing sync:", error);
+    }
+  }
+  
+  // Show the sync dialog for all documents with differences
+  async showSyncDialog(differences) {
+    try {
+      // Process all pending syncs
+      await this.documentSynchronizer.processAllPendingSyncs(
+        (message, type) => this.showNotification(message, type)
+      );
+      
+      this.showNotification("Synchronization complete", "success");
+    } catch (error) {
+      console.error("Error during synchronization:", error);
+      this.showNotification("Error during synchronization: " + error.message, "error");
+    }
   }
 }
 

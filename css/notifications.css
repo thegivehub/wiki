@@ -1,0 +1,132 @@
+/* Notifications Container */
+.notifications-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    max-width: 350px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Individual Notification */
+.notification {
+    background-color: white;
+    border-left: 4px solid #4b5563;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 0;
+    display: flex;
+    overflow: hidden;
+    transform: translateX(120%);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.notification.visible {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.notification.removing {
+    transform: translateX(120%);
+    opacity: 0;
+}
+
+/* Notification Types */
+.notification.success {
+    border-left-color: #10b981;
+}
+
+.notification.error {
+    border-left-color: #ef4444;
+}
+
+.notification.warning {
+    border-left-color: #f59e0b;
+}
+
+.notification.info {
+    border-left-color: #3b82f6;
+}
+
+/* Notification Content */
+.notification-content {
+    flex: 1;
+    padding: 12px 15px;
+    position: relative;
+}
+
+.notification-message {
+    display: block;
+    color: #1f2937;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* Success notification styles */
+.notification.success .notification-message::before {
+    content: "✓";
+    font-weight: bold;
+    margin-right: 8px;
+    color: #10b981;
+}
+
+/* Error notification styles */
+.notification.error .notification-message::before {
+    content: "✗";
+    font-weight: bold;
+    margin-right: 8px;
+    color: #ef4444;
+}
+
+/* Warning notification styles */
+.notification.warning .notification-message::before {
+    content: "⚠";
+    font-weight: bold;
+    margin-right: 8px;
+    color: #f59e0b;
+}
+
+/* Info notification styles */
+.notification.info .notification-message::before {
+    content: "ℹ";
+    font-weight: bold;
+    margin-right: 8px;
+    color: #3b82f6;
+}
+
+/* Notification Close Button */
+.notification-close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    padding: 12px 10px;
+    cursor: pointer;
+    color: #9ca3af;
+    align-self: flex-start;
+}
+
+.notification-close:hover {
+    color: #1f2937;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .notification {
+        background-color: #1f2937;
+    }
+    
+    .notification-message {
+        color: #f3f4f6;
+    }
+    
+    .notification-close {
+        color: #9ca3af;
+    }
+    
+    .notification-close:hover {
+        color: #f3f4f6;
+    }
+} 

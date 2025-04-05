@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiki Document Editor</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/document-editor.css">
+    <link rel="stylesheet" href="css/markdown.css">
+    <link rel="stylesheet" href="css/version-history.css">
+    <link rel="stylesheet" href="css/notifications.css">
+    <!-- Load JS libraries first -->
+    <script src="js/lib/marked.min.js"></script>
+    <script src="js/lib/diff.min.js"></script>
+    <!-- Additional CSS -->
+</head>
+<body>
+    <div class="main-container">
+        <header class="main-header">
+            <div class="logo">TheGiveHub Wiki</div>
+            <div class="header-controls">
+                <!-- Header controls go here -->
+            </div>
+        </header>
+
+        <div class="content-container">
+            <div class="sidebar">
+                <div class="navigation-container">
+                    <!-- Navigation content populated by JS -->
+                </div>
+            </div>
+
+            <div class="document-container">
+                <div class="document-header">
+                    <div class="document-path">
+                        <!-- Breadcrumb navigation -->
+                    </div>
+                    <div class="document-toolbar">
+                        <div class="toolbar-group">
+                            <button id="edit-toggle" class="toolbar-button">
+                                <span class="icon">✏️</span>
+                                <span class="label">Edit</span>
+                            </button>
+                            <button id="save-button" class="toolbar-button" disabled>
+                                <span class="icon">💾</span>
+                                <span class="label">Save</span>
+                            </button>
+                            <button id="discard-button" class="toolbar-button" disabled>
+                                <span class="icon">🗑️</span>
+                                <span class="label">Discard</span>
+                            </button>
+                        </div>
+                        <div class="toolbar-group">
+                            <version-history></version-history>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="document-view">
+                    <div id="view-container" class="view-container">
+                        <!-- Document content rendered as HTML -->
+                    </div>
+                    <div id="edit-container" class="edit-container hidden">
+                        <textarea id="markdown-editor"></textarea>
+                        <div id="commit-message-container" class="commit-message-container hidden">
+                            <label for="commit-message">Commit Message:</label>
+                            <input type="text" id="commit-message" placeholder="Describe your changes (optional)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save Confirmation Modal -->
+    <div id="sync-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Document Changes Detected</h2>
+                <span class="close-button">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>This document has been modified since you last opened it. How would you like to proceed?</p>
+                <div class="sync-options">
+                    <button id="use-server-version" class="modal-button">Use Server Version</button>
+                    <button id="use-local-version" class="modal-button">Use My Version</button>
+                    <button id="compare-versions" class="modal-button primary">Compare Differences</button>
+                </div>
+                <div id="diff-view" class="diff-view hidden">
+                    <!-- Diff content will be displayed here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="sync-cancel" class="modal-button">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Version Preview Modal -->
+    <div id="version-preview-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Version Preview</h2>
+                <span class="close-button">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="version-info">
+                    <p><strong>Date:</strong> <span id="version-date"></span></p>
+                    <p><strong>Author:</strong> <span id="version-author"></span></p>
+                    <p><strong>Message:</strong> <span id="version-message"></span></p>
+                </div>
+                <div id="version-content" class="version-content">
+                    <!-- Version content will be displayed here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="restore-version" class="modal-button primary">Restore This Version</button>
+                <button id="version-preview-close" class="modal-button">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load JS in correct order -->
+    <!-- First load the ContentManager, then components, then app -->
+    <script src="js/content-manager.js"></script>
+    <script src="js/components/version-history.js"></script>
+    <script src="js/app-versioning.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Make sure ContentManager is defined before initializing App
+            if (typeof ContentManager === 'undefined') {
+                console.error('ContentManager is not defined! Check script loading order.');
+                return;
+            }
+            
+            // Initialize app
+            App.init();
+            
+            // Add event listener for version selection
+            document.addEventListener('version-selected', function(e) {
+                const { type, path, version, content } = e.detail;
+                
+                // Show version preview modal
+                const modal = document.getElementById('version-preview-modal');
+                const dateEl = document.getElementById('version-date');
+                const authorEl = document.getElementById('version-author');
+                const messageEl = document.getElementById('version-message');
+                const contentEl = document.getElementById('version-content');
+                
+                // Populate modal with version details
+                dateEl.textContent = version.date;
+                authorEl.textContent = version.author || 'Unknown';
+                messageEl.textContent = version.message || 'No commit message';
+                
+                if (type === 'doc') {
+                    // For markdown content, render it
+                    contentEl.innerHTML = marked.parse(content);
+                } else {
+                    // For navigation content, display as formatted JSON
+                    contentEl.innerHTML = `<pre>${JSON.stringify(content, null, 2)}</pre>`;
+                }
+                
+                // Show modal
+                modal.classList.add('visible');
+                
+                // Setup restore button
+                const restoreBtn = document.getElementById('restore-version');
+                restoreBtn.onclick = function() {
+                    if (confirm(`Are you sure you want to restore this version from ${version.date}?`)) {
+                        // Close modal
+                        modal.classList.remove('visible');
+                        
+                        // Dispatch event to component to handle the restore
+                        document.dispatchEvent(new CustomEvent('restore-version', {
+                            detail: { type, path, version }
+                        }));
+                    }
+                };
+                
+                // Setup close button
+                const closeBtn = document.getElementById('version-preview-close');
+                closeBtn.onclick = function() {
+                    modal.classList.remove('visible');
+                };
+                
+                // Setup X button
+                const closeX = modal.querySelector('.close-button');
+                closeX.onclick = function() {
+                    modal.classList.remove('visible');
+                };
+            });
+            
+            // Add event listener for document restored
+            document.addEventListener('document-restored', function(e) {
+                const { path, type } = e.detail;
+                
+                // Refresh the document content
+                if (type === 'doc') {
+                    App.loadDocument(path, true);
+                } else {
+                    // For navigation, could implement a refresh mechanism
+                    // or simply reload the page
+                    window.location.reload();
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

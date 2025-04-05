@@ -246,3 +246,102 @@ markdown-editor {
   }
 }
 
+/* Document Sync Dialog */
+.sync-dialog-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sync-dialog {
+  background-color: var(--bg-color);
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 6px var(--shadow-color);
+  max-width: 600px;
+  width: 90%;
+  padding: 20px;
+  z-index: 1001;
+}
+
+.sync-dialog-header {
+  margin-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+}
+
+.sync-dialog-header h2 {
+  margin: 0 0 10px 0;
+  color: var(--primary-color);
+}
+
+.sync-stats {
+  background-color: var(--bg-light-color);
+  padding: 10px;
+  border-radius: var(--border-radius);
+  margin-bottom: 15px;
+}
+
+.sync-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.sync-options label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.sync-options input {
+  margin-right: 10px;
+}
+
+.sync-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 15px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: var(--border-radius);
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-secondary {
+  background-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.btn-secondary:hover {
+  background-color: #d1d5db;
+}
+
+.notification.info {
+  background-color: #3b82f6;
+}
+
