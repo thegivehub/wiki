@@ -11,6 +11,12 @@
  * - Nav: Handles navigation structure operations
  */
 
+// Enable error reporting for debugging
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/api_errors.log');
+error_reporting(E_ALL);
+
 // Set content type to JSON
 header('Content-Type: application/json');
 
@@ -58,6 +64,42 @@ $validResources = ['Doc', 'Nav'];
 
 // Check if resource is valid
 if (!in_array($resource, $validResources)) {
+    // Special diagnostic endpoint for Git status
+    if ($resource === 'Diagnostic' && $action === 'git') {
+        try {
+            // Check if Git is installed
+            exec('command -v git', $gitPathOutput, $gitPathReturnCode);
+            $gitInstalled = ($gitPathReturnCode === 0);
+            
+            // Check if .git directory exists
+            $repoPath = realpath(__DIR__);
+            $gitDirExists = is_dir($repoPath . '/.git');
+            
+            // Try to run a simple git command
+            $gitCommandWorks = false;
+            if ($gitInstalled) {
+                exec('cd ' . escapeshellarg($repoPath) . ' && git --version', $gitVersionOutput, $gitVersionReturnCode);
+                $gitCommandWorks = ($gitVersionReturnCode === 0);
+            }
+            
+            // Output diagnostic info
+            echo json_encode([
+                'success' => true,
+                'data' => [
+                    'git_installed' => $gitInstalled,
+                    'git_path' => $gitInstalled ? $gitPathOutput[0] : null,
+                    'git_dir_exists' => $gitDirExists,
+                    'git_command_works' => $gitCommandWorks,
+                    'git_version' => $gitCommandWorks ? implode("\n", $gitVersionOutput) : null,
+                    'repo_path' => $repoPath
+                ]
+            ]);
+            exit;
+        } catch (Exception $e) {
+            apiError("Git diagnostic failed: " . $e->getMessage(), 500);
+        }
+    }
+    
     apiError("Invalid resource: {$resource}. Valid resources are: " . implode(', ', $validResources), 404);
 }
 

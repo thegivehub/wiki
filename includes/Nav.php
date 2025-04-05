@@ -16,9 +16,19 @@ class Nav {
     public function __construct() {
         $this->repoPath = realpath(__DIR__ . '/..');
         
-        // Check if git is enabled (repository exists)
+        // Check if git is enabled (repository exists AND git command is available)
+        $this->gitEnabled = false;
+        
         if (is_dir($this->repoPath . '/.git')) {
-            $this->gitEnabled = true;
+            // Check if git command is available
+            exec('command -v git', $output, $returnCode);
+            if ($returnCode === 0) {
+                $this->gitEnabled = true;
+            } else {
+                error_log("Git repository exists but git command is not available");
+            }
+        } else {
+            error_log("Git repository (.git directory) not found in {$this->repoPath}");
         }
         
         // Ensure nav directory exists
@@ -888,23 +898,49 @@ class Nav {
      */
     private function getGitHistory($path, $limit = 10) {
         if (!$this->gitEnabled) {
+            error_log("Git is not enabled, returning empty history for nav");
             return [];
         }
         
+        // Make sure path is relative to repo
+        $relPath = substr($path, strlen($this->repoPath) + 1);
+        $relPath = str_replace('\\', '/', $relPath);
+        
         // Format: hash|author|date|message
         $format = "--pretty=format:%H|%an|%at|%s";
-        $command = sprintf('cd %s && git log %s -n %d -- %s', 
+        $command = sprintf('cd %s && git log %s -n %d -- %s 2>&1', 
             escapeshellarg($this->repoPath),
             $format,
             $limit,
-            escapeshellarg($path)
+            escapeshellarg($relPath)
         );
+        
+        error_log("Executing git command for nav: {$command}");
         
         exec($command, $output, $returnCode);
         
         if ($returnCode !== 0) {
-            error_log("Git log failed for file {$path}");
+            error_log("Git log failed for nav file {$relPath} with return code {$returnCode}");
+            error_log("Command output: " . implode("\n", $output));
             return [];
+        }
+        
+        // If no output, the file might not be tracked
+        if (empty($output)) {
+            error_log("No git history found for nav {$relPath}, checking if file is tracked");
+            
+            // Check if file is tracked by git
+            $trackCommand = sprintf('cd %s && git ls-files --error-unmatch %s 2>/dev/null', 
+                escapeshellarg($this->repoPath),
+                escapeshellarg($relPath)
+            );
+            
+            exec($trackCommand, $trackOutput, $trackReturnCode);
+            
+            if ($trackReturnCode !== 0) {
+                error_log("Nav file {$relPath} is not tracked by git");
+                return [];
+            }
         }
         
         $history = [];
@@ -918,9 +954,12 @@ class Nav {
                     'date' => date('Y-m-d H:i:s', (int)$parts[2]),
                     'message' => $parts[3]
                 ];
+            } else {
+                error_log("Malformed git log line for nav: {$line}");
             }
         }
         
+        error_log("Retrieved " . count($history) . " history entries for nav {$relPath}");
         return $history;
     }
 } 

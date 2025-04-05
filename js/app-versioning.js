@@ -382,8 +382,9 @@ const App = {
     /**
      * Toggle edit mode
      * @param {boolean} forceState - Force a specific state
+     * @param {boolean} skipConfirmation - Skip confirmation even if there are unsaved changes
      */
-    toggleEditMode: function(forceState) {
+    toggleEditMode: function(forceState, skipConfirmation) {
         // Determine target state
         const targetState = (forceState !== undefined) ? forceState : !this.isEditing;
         
@@ -432,8 +433,8 @@ const App = {
         } else {
             // Switching to view mode
             
-            // If document was modified, ask for confirmation
-            if (this.documentModified) {
+            // If document was modified and not skipping confirmation, ask for confirmation
+            if (this.documentModified && !skipConfirmation) {
                 if (!confirm('You have unsaved changes. Discard them?')) {
                     return;
                 }
@@ -494,8 +495,8 @@ const App = {
                 // Update the view with the new content
                 this.displayDocument(content);
                 
-                // Exit edit mode
-                this.toggleEditMode(false);
+                // Exit edit mode - skip confirmation since we've just saved
+                this.toggleEditMode(false, true);
                 
                 // Restore save button
                 if (saveButton) {
@@ -543,8 +544,8 @@ const App = {
         const originalContent = viewContainer.getAttribute('data-original') || '';
         editor.value = originalContent;
         
-        // Exit edit mode
-        this.toggleEditMode(false);
+        // Exit edit mode - skip confirmation since we've already confirmed
+        this.toggleEditMode(false, true);
     },
     
     /**
